@@ -1,3 +1,12 @@
+/**********************************************************
+ * CSCI 241         Assignment 1      Spring 2021
+ * @author Alexander Kashyap
+ * @file bubble_sort.cpp
+ * @version 1.0
+ * Section: 1
+ * Date Due: 1/21/2021
+ * Purpose:  A program that sorts an array of ints using the bubble sort
+ **********************************************************/
 #include <iostream>
 #include <iomanip>
 
@@ -33,12 +42,14 @@ int main(int argc, char * argv[]) {
 
     return 0;
 }
+
 /**
  * sorts a passed array of length size using the insertion sort algorithem 
  * @param array array to be sorted
  * @param size size of the array to be sorted
  */
 void bubble_sort(int array[], int size) {
+    //iterate through and swap larger values to the end over each pass
     for (int maxElement = size - 1; maxElement > 0; maxElement--) {
         for (int index = 0; index < maxElement; index++) {
             if (array[index] > array[index+1]) {

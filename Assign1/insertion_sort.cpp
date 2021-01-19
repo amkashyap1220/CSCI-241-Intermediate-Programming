@@ -1,12 +1,12 @@
-/***************************************************************
- CSCI 241         Program 10     Fall 2020
- @author Alexander Kashyap
- @file selection_sort.cpp
- @version 1.0
- Section: 
- Date Due: N/A
- Purpose:  the simplified version of the game Twenty-One
-***************************************************************/
+/**********************************************************
+ * CSCI 241         Assignment 1      Spring 2021
+ * @author Alexander Kashyap
+ * @file insertion_sort.cpp
+ * @version 1.0
+ * Section: 1
+ * Date Due: 1/21/2021
+ * Purpose:  A program that sorts an array of ints using the inesertion sort
+ **********************************************************/
 #include <iostream>
 #include <iomanip>
 
@@ -50,7 +50,18 @@ int main(int argc, char *argv[]) {
  * @param size size of the array to be sorted
  */
 void insertion_sort(int array[], int size){
-    
+    //loop through the array
+    for (int i = 1; i < size; i++) {
+        int key = array[i];
+        int j = i - 1;
+        //compare the current element to each element before it
+        while(j >= 0 and array[j] > key) {
+            swap(array[j+1], array[j]);
+            j--;
+        }
+        //once its at its position-place it.
+        array[j+1] = key;
+    }
 }
 
 /**
