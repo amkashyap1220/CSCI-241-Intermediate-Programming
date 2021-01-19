@@ -33,6 +33,7 @@ int main(int argc, char *argv[]) {
     selection_sort(numbers, count);
 
     //print out the sorted numbers
+    cout << right;
     for(int i = 0; i < count; i++) {
         cout << setw(8) << numbers[i];
         if ((i + 1) % 8 == 0) {
@@ -40,7 +41,6 @@ int main(int argc, char *argv[]) {
         }
     }
     cout << endl;
-    
     return 0;
 }
 
