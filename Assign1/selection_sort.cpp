@@ -34,13 +34,17 @@ int main(int argc, char *argv[]) {
 
     //print out the sorted numbers
     cout << right;
-    for(int i = 0; i < count; i++) {
+    int i = 0;
+    for(; i < count; i++) {
         cout << setw(8) << numbers[i];
         if ((i + 1) % 8 == 0) {
             cout << endl;
         }
     }
-    cout << endl;
+    if (i % 8 != 0) {
+        cout << endl;
+    }
+    
     return 0;
 }
 
