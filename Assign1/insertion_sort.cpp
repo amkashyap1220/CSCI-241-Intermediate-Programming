@@ -14,7 +14,6 @@ using namespace std;
 
 //function prototypes
 void insertion_sort(int array[], int size);
-void swap(int &b, int &a);
 
 //the max array size
 #define MAXARRAYSIZE 1000
@@ -56,25 +55,14 @@ int main(int argc, char *argv[]) {
 void insertion_sort(int array[], int size){
     //loop through the array
     for (int i = 1; i < size; i++) {
-        int key = array[i];
-        int j = i - 1;
+        int temp = array[i];
+        int j = i;
         //compare the current element to each element before it
-        while(j >= 0 and array[j] > key) {
-            swap(array[j+1], array[j]);
+        while(j > 0 and array[j - 1] > temp) {
+            array[j] = array[j-1];
             j--;
         }
         //once its at its position-place it.
-        array[j+1] = key;
+        array[j] = temp;
     }
-}
-
-/**
- * swaps two integers in memory
- * @param a first int
- * @param b second int 
- */
-void swap(int &a, int &b) {
-    int temp = a;
-    a = b;
-    b = temp;
 }
