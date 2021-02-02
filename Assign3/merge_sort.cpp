@@ -10,11 +10,12 @@
 #include <iostream>
 #include <iomanip>
 
+// Define the max array size
 #define MAXARRAYSIZE 1000
 
 using namespace std;
 
-//Function Prototypes
+// Function Prototypes
 void merge_sort(int array[], int start, int end);
 void merge(int array[], int start, int mid, int end);
 
@@ -27,19 +28,19 @@ void merge(int array[], int start, int mid, int end);
  * @param argv arugments
  */
 int main(int argc, char* argv[]) {
-    //defining the array
+    // defining the array
     int numbers[MAXARRAYSIZE];
 
-    //filling the array with the values taken from the input strema
+    // filling the array with the values taken from the input strema
     int count = 0;
     while (cin >> numbers[count]) {
         count++;
     }
     
-    //call the sort funciton
+    // call the sort funciton
     merge_sort(numbers, 0, count - 1);
 
-    //print out the sorted numbers
+    // print out the sorted numbers
     cout << right;
     int i = 0;
     for(; i < count; i++) {
@@ -64,14 +65,21 @@ int main(int argc, char* argv[]) {
  * @param end ending index
  */
 void merge_sort(int array[], int start, int end) {
-    if (start < end) {
-        int mid = (start + end - 1) / 2;
-
-        merge_sort(array, start, mid);
-        merge_sort(array, mid + 1, end);
-
-        merge(array, start, mid, end);
+    // Base case
+    if (start >= end) {
+        return;
     }
+
+    // Define a midpoint to split the merge down
+    int mid = (start + end - 1) / 2;
+
+    // Recursivily call the merge with new midpoints down to 1 element
+    merge_sort(array, start, mid);
+    merge_sort(array, mid + 1, end);
+
+    // Merge splits back together in correct order
+    merge(array, start, mid, end);
+    
 }
 
 /**
@@ -82,17 +90,18 @@ void merge_sort(int array[], int start, int end) {
  * @param end end index of array
  */
 void merge(int array[], int start, int mid, int end) {
-    
+    // Define two temporary arrays to hold values from the array to be sorted
     int n1 = mid - start + 1; 
     int n2 = end - mid;
-    
     int temp1[n1];
     int temp2[n2];
 
+    // Initialize counteers that go through each of the 3 arrays
     int i = 0;
     int j = 0;
     int k = start;
 
+    // Fill the temporary arrays
     for (int z = 0; z < n1; z++) {
         temp1[z] = array[start + z];
     }
@@ -100,6 +109,7 @@ void merge(int array[], int start, int mid, int end) {
         temp2[z] = array[mid + 1 + z];
     }
 
+    // Go back through the array filling from the temporary arrays, smaller values first
     while (i < n1 && j < n2) {
         if (temp1[i] <= temp2[j]) {
             array[k] = temp1[i];
@@ -111,51 +121,15 @@ void merge(int array[], int start, int mid, int end) {
         k++;
     }
 
+    // Fill with remaining elements
     while (i < n1) {
         array[k] = temp1[i];
         i++;
         k++;
     }
-
     while (j < n2) {
         array[k] = temp2[j];
         j++;
         k++;
     }
-
-    /*
-    int temp[end - start + 1];
-
-    int i = start;
-    int j = mid + 1;
-    int k = 0;
-
-    while (i <= mid and j <= mid) {
-        if (array[i] < array[j]) {
-            temp[k] = array[i];
-            i++;
-        } else {
-            temp[k] = array[j];
-            j++;
-        }
-        k++;
-    }
-
-    while (i <= mid) {
-        temp[k] = array[i];
-        i++;
-        j++;
-    }
-
-    while (j <= end) {
-        temp[k] = array[j];
-        j++;
-        k++;
-    }
-
-    while (k >= 0) {
-        array[k] = temp[k];
-        k--;
-    }*/
-
 }
