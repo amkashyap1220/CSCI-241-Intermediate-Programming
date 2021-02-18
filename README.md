@@ -7,5 +7,5 @@ A second course in programming techniques with emphasis on design and implementa
   * Non-recursive sorts (bubble, insertition, selection)
 * Assignment 2 (100/100)
   * Recursion
-* Assignment 3
+* Assignment 3 (100/100)
   * Recursive sorts (merge, quick)
