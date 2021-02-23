@@ -8,6 +8,7 @@
  * Section: 1
  */
 
+#include <iomanip>
 #include "bank.h"
 #include <fstream>
 #include <cstring>
