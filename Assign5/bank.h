@@ -11,10 +11,13 @@
 #define BANK_H
 
 #include <string>
-#include "account.h"
+#include "account.h" // Bank needs to know about account
 
 using std::string;
 
+/**
+ * @brief bank class that has a name and stores accounts and their information in it.
+ */
 class bank
 {
 private:
@@ -26,6 +29,8 @@ public:
     void read_accounts(string filename);
     void process_transactions(string filename);
     void print() const;
+    int binary_search_account(char account_number[]);
+    void selection_sort_account();
 };
 
 #endif

@@ -11,10 +11,21 @@
 #include "account.h"
 #include <iostream>
 using namespace std;
+
+/**
+ * @brief The purpose of this program is to create and print a small collection of bank accounts. As well as run some transactions on them.
+ * 
+ * @param argc Argument count
+ * @param argv Arguments
+ * @return int exit code
+ */
 int main(int argc, char* argv[])
 {
-    account alex;
-    cout << alex.get_account_balance() << endl;
-    alex.process_deposit(100);
-    cout << alex.get_account_balance() << endl;
+    // Create a bank object, read in accounts, and process the transactions.
+    bank chase;
+    chase.read_accounts("accounts");
+    chase.print();
+    chase.process_transactions("transactions.txt");
+    chase.print();
+    exit(0);
 }

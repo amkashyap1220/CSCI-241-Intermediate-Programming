@@ -42,6 +42,7 @@ double account::get_account_balance() const
  */
 void account::process_deposit(double deposit_amount)
 {
+    // add deposit_amount
     this->account_balance += deposit_amount;
 }
 
@@ -56,6 +57,7 @@ void account::process_deposit(double deposit_amount)
  */
 bool account::process_withdrawal(double withdrawal_amount)
 {
+    // subtract withdrawal_amount if account has a high enough balance
     if (this->account_balance < withdrawal_amount)
     {
         return false;
@@ -70,9 +72,8 @@ bool account::process_withdrawal(double withdrawal_amount)
  */
 void account::print() const
 {
+    // print the account number, name, and balance
     cout << "Account Number: " << account_number << endl;
     cout << "Name: " << customer_name << endl;
     cout << "Balance: $" << fixed << setprecision(2) << account_balance << endl;
-    
 }
-// Random note - use insertion sort and then search
