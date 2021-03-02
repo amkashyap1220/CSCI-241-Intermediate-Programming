@@ -1,8 +1,8 @@
 #
 # PROGRAM:    assign6
-# PROGRAMMER: your name
-# LOGON ID:   your z-id
-# DATE DUE:   due date of program
+# PROGRAMMER: alexander kashyap
+# LOGON ID:   z1926618
+# DATE DUE:   3/4/21
 #
 
 # Compiler variables

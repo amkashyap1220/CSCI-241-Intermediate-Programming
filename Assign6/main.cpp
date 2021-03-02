@@ -1,11 +1,12 @@
-//***************************************************************************
-//
-//  main.cpp
-//  CSCI 241 Assignment 6
-//
-//  Created by name(s) and z-ID(s)
-//
-//***************************************************************************
+/**
+ * @file bank.h
+ * @author Alexander Kashyap (z1926618@students.niu.edu)
+ * @date 2021-02-18
+ * 
+ * Assignment 5
+ * Course: CSCI 241
+ * Section: 1
+ */
 
 #include <iostream>
 #include <iomanip>
@@ -20,6 +21,7 @@ using std::tuple;
 
 int main()
 {
+    /**
     cout << "Testing constructor... ";
     complex c1(23, 34);
     const complex c4(3, 4);
@@ -86,5 +88,6 @@ int main()
     (c4 == c5) ? cout << " are equal\n" : cout << " are not equal\n";
       
     return 0;
+    **/
 }
 
