@@ -1,9 +1,9 @@
 /**
  * @file bank.h
  * @author Alexander Kashyap (z1926618@students.niu.edu)
- * @date 2021-02-18
+ * Due: 2021-03-04
  * 
- * Assignment 5
+ * Assignment 6
  * Course: CSCI 241
  * Section: 1
  */
@@ -26,6 +26,13 @@ public:
     complex() = default;
     void set_complex(double real_part, double imaginary_part);
     std::tuple<double, double> get_complex() const;
+    void set_real(double real_part);
+    double get_real();
+    void set_imaginary(double imaginary_part);
+    double get_imaginary();
+
+    complex operator+(const complex& rhs) const;
+    complex operator*(const complex& rhs) const;
 
 };
 

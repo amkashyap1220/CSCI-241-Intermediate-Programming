@@ -1,13 +1,3 @@
-/**
- * @file bank.h
- * @author Alexander Kashyap (z1926618@students.niu.edu)
- * @date 2021-02-18
- * 
- * Assignment 5
- * Course: CSCI 241
- * Section: 1
- */
-
 #include <iostream>
 #include <iomanip>
 #include <tuple>
