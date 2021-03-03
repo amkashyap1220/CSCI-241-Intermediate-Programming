@@ -1,5 +1,5 @@
 /**
- * @file bank.h
+ * @file complex.cpp
  * @author Alexander Kashyap (z1926618@students.niu.edu)
  * Due: 2021-03-04
  * 
@@ -44,6 +44,7 @@ void complex::set_complex(double real_part, double imaginary_part)
  */
 std::tuple<double, double> complex::get_complex() const
 {
+    // create a tuple object
     std::tuple<double, double> toReturn(this->real_part, this->imaginary_part);
     return toReturn;
 }
@@ -98,6 +99,7 @@ complex complex::operator+(const complex &rhs) const
 {
     complex result;
 
+    // addition logic
     result.real_part = this->real_part + rhs.real_part;
     result.imaginary_part = this->imaginary_part + rhs.imaginary_part;
 
@@ -108,6 +110,7 @@ complex complex::operator*(const complex &rhs) const
 {
     complex result;
 
+    // * logic for complex
     result.real_part = (this->real_part * rhs.real_part) - (this->imaginary_part * rhs.imaginary_part);
     result.imaginary_part = (this->real_part * rhs.imaginary_part) + (this->imaginary_part * rhs.real_part);
 
@@ -116,6 +119,7 @@ complex complex::operator*(const complex &rhs) const
 
 bool complex::operator==(const complex &rhs) const
 {
+    // checks if both parts of the complex are =
     if (rhs.imaginary_part != this->imaginary_part)
         return false;
     if (rhs.real_part != this->real_part)
@@ -125,12 +129,14 @@ bool complex::operator==(const complex &rhs) const
 
 ostream &operator<<(ostream &os, const complex &rhs)
 {
+    // print out in (x, y)
     os << "(" << rhs.real_part << ", " << rhs.imaginary_part << ")";
     return os;
 }
 
 istream &operator>>(istream &is, complex &rhs)
 {
+    // read in from (x, y)
     char unused;
 
     is >> unused;

@@ -1,5 +1,5 @@
 /**
- * @file bank.h
+ * @file complex.h
  * @author Alexander Kashyap (z1926618@students.niu.edu)
  * Due: 2021-03-04
  * 
@@ -21,23 +21,29 @@ using std::istream;
  */
 class complex
 {
+    // overloaded operators as friends
     friend istream& operator>>(istream& lhs, complex& rhs);
     friend ostream& operator<<(ostream& lhs, const complex& rhs);
 
 private:
+    // private data members, the parts of the complex #
     double real_part = 0;
     double imaginary_part = 0;
 
 public:
+    // constructors
     complex(double real_part, double imaginary_part);
     complex() = default;
+
+    // set's and get's
     void set_complex(double real_part, double imaginary_part);
-    std::tuple<double, double> get_complex() const;
-    void set_real(double real_part);
-    double get_real() const;
     void set_imaginary(double imaginary_part);
+    void set_real(double real_part);
+    std::tuple<double, double> get_complex() const;
+    double get_real() const;
     double get_imaginary() const;
 
+    // operator overloads for arithmetic and ==
     complex operator+(const complex& rhs) const;
     complex operator*(const complex& rhs) const;
     bool operator==(const complex& rhs) const;
