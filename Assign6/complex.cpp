@@ -10,7 +10,9 @@
 
 #include "complex.h"
 #include <tuple>
+#include <iostream>
 
+using namespace std;
 /**
  * @brief Construct a new complex object
  * 
@@ -42,7 +44,7 @@ void complex::set_complex(double real_part, double imaginary_part)
  */
 std::tuple<double, double> complex::get_complex() const
 {
-    std::tuple<double, double> toReturn (this->real_part, this->imaginary_part);
+    std::tuple<double, double> toReturn(this->real_part, this->imaginary_part);
     return toReturn;
 }
 
@@ -61,7 +63,7 @@ void complex::set_real(double real_part)
  * 
  * @return double the real part
  */
-double complex::get_real()
+double complex::get_real() const
 {
     return this->real_part;
 }
@@ -81,7 +83,7 @@ void complex::set_imaginary(double imaginary_part)
  * 
  * @return double the imaginary part
  */
-double complex::get_imaginary()
+double complex::get_imaginary() const
 {
     return this->imaginary_part;
 }
@@ -92,19 +94,50 @@ double complex::get_imaginary()
  * @param rhs the "right hand side" complex number to be added with the complex 
  * @return complex the sum of 2 compelx #'s
  */
-complex complex::operator+(const complex& rhs) const
+complex complex::operator+(const complex &rhs) const
 {
     complex result;
-    
+
     result.real_part = this->real_part + rhs.real_part;
     result.imaginary_part = this->imaginary_part + rhs.imaginary_part;
 
     return result;
 }
 
-complex complex::operator*(const complex& rhs) const
+complex complex::operator*(const complex &rhs) const
 {
     complex result;
-    // * logic here
+
+    result.real_part = (this->real_part * rhs.real_part) - (this->imaginary_part * rhs.imaginary_part);
+    result.imaginary_part = (this->real_part * rhs.imaginary_part) + (this->imaginary_part * rhs.real_part);
+
     return result;
+}
+
+bool complex::operator==(const complex &rhs) const
+{
+    if (rhs.imaginary_part != this->imaginary_part)
+        return false;
+    if (rhs.real_part != this->real_part)
+        return false;
+    return true;
+}
+
+ostream &operator<<(ostream &os, const complex &rhs)
+{
+    os << "(" << rhs.real_part << ", " << rhs.imaginary_part << ")";
+    return os;
+}
+
+istream &operator>>(istream &is, complex &rhs)
+{
+    char unused;
+
+    is >> unused;
+    is >> rhs.real_part;
+    is >> unused;
+    is >> rhs.imaginary_part;
+    is >> unused;
+
+    return is;
 }

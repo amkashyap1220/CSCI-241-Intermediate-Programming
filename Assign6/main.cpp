@@ -11,7 +11,7 @@ using std::tuple;
 
 int main()
 {
-    /**
+    
     cout << "Testing constructor... ";
     complex c1(23, 34);
     const complex c4(3, 4);
@@ -48,6 +48,7 @@ int main()
     c2.set_imaginary(83);  
     cout << "New value of c2 = " << c2 << endl << endl;
    
+    
     cout << "Testing stream extraction operator...\n";
    
     cout << "Enter a complex number in the form (a, b) ";
@@ -68,6 +69,7 @@ int main()
     cout << c4 << " * " << c1 << " = " << c4 * c1 << endl;  
     cout << c4 << " * " << c4 << " = " << c4 * c4 << endl << endl;  
 
+    
     cout << "Testing equality operator...\n";
 
     cout << c1 << " and " << c3;
@@ -78,6 +80,5 @@ int main()
     (c4 == c5) ? cout << " are equal\n" : cout << " are not equal\n";
       
     return 0;
-    **/
 }
 
