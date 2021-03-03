@@ -45,8 +45,7 @@ void complex::set_complex(double real_part, double imaginary_part)
 std::tuple<double, double> complex::get_complex() const
 {
     // create a tuple object
-    std::tuple<double, double> toReturn(this->real_part, this->imaginary_part);
-    return toReturn;
+    return make_tuple(this->real_part, this->imaginary_part);
 }
 
 /**
@@ -133,11 +132,7 @@ complex complex::operator*(const complex &rhs) const
 bool complex::operator==(const complex &rhs) const
 {
     // checks if both parts of the complex are =
-    if (rhs.imaginary_part != this->imaginary_part)
-        return false;
-    if (rhs.real_part != this->real_part)
-        return false;
-    return true;
+    return (rhs.imaginary_part == this->imaginary_part) && (rhs.real_part == this->real_part);
 }
 
 /**

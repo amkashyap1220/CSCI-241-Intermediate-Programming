@@ -32,8 +32,7 @@ private:
 
 public:
     // constructors
-    complex(double real_part, double imaginary_part);
-    complex() = default;
+    complex(double real_part = 0.0, double imaginary_part = 0.0);
 
     // set's and get's
     void set_complex(double real_part, double imaginary_part);
