@@ -106,6 +106,12 @@ complex complex::operator+(const complex &rhs) const
     return result;
 }
 
+/**
+ * @brief operator overload for *
+ * 
+ * @param rhs the right hand operand
+ * @return complex the product of 2 complex #
+ */
 complex complex::operator*(const complex &rhs) const
 {
     complex result;
@@ -117,6 +123,13 @@ complex complex::operator*(const complex &rhs) const
     return result;
 }
 
+/**
+ * @brief operator overload for equality, determines if 2 complex #'s are =
+ * 
+ * @param rhs the right hand side of the operand
+ * @return true complex # are =
+ * @return false complex # are not =
+ */
 bool complex::operator==(const complex &rhs) const
 {
     // checks if both parts of the complex are =
@@ -127,6 +140,13 @@ bool complex::operator==(const complex &rhs) const
     return true;
 }
 
+/**
+ * @brief prints a complex number
+ * 
+ * @param os stream object
+ * @param rhs complex number to be printed
+ * @return ostream& the ostream object reference for output
+ */
 ostream &operator<<(ostream &os, const complex &rhs)
 {
     // print out in (x, y)
@@ -134,6 +154,13 @@ ostream &operator<<(ostream &os, const complex &rhs)
     return os;
 }
 
+/**
+ * @brief reads in a number to complex
+ * 
+ * @param is input stream object reference
+ * @param rhs the compelex reference object we are going to read into
+ * @return istream& the input stream object back for casscading
+ */
 istream &operator>>(istream &is, complex &rhs)
 {
     // read in from (x, y)
