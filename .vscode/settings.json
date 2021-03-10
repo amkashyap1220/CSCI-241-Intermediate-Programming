@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "__tuple": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "iosfwd": "cpp",
+        "string": "cpp"
     }
 }
