@@ -7,7 +7,8 @@
     
 # Compiler variables
 CXX = g++
-CXXFLAGS = -Wall -Werror -std=c++11
+CXXFLAGS = -std=c++11
+#CXXFLAGS = -Wall -Werror -std=c++11
         
 # Rule to link object code files to create executable file
 all: scc simplesim
