@@ -11,6 +11,7 @@
         "locale": "cpp",
         "ostream": "cpp",
         "streambuf": "cpp",
-        "type_traits": "cpp"
+        "type_traits": "cpp",
+        "iomanip": "cpp"
     }
 }
