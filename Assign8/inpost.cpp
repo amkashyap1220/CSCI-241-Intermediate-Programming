@@ -29,7 +29,7 @@ string convert(const string& infix)
     map<char, int> map = { { '~', 3 }, { '^', 3 }, { '*', 2 }, { '/', 2 }, { '+', 1 }, { '-', 1 } };
 
     string postfix = "";
-    mystack stack;
+    mystack<char> stack;
 
     // Loop through each char in the infix string and run it throught the conversion algo to postfix
     for (size_t i = 0; i < infix.length(); i++)

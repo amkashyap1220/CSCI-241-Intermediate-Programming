@@ -47,6 +47,7 @@ private:
     int search_symbol_table(int, char) const;
     void handle_data(istringstream &ss);
     void handle_let(istringstream &ss, const string& buffer);
+    void stack_space_check(int location) const;
 };
 
 int main(int argc, char *argv[])
@@ -65,6 +66,15 @@ scc::scc()
     {
         memory[i] = 7777;
         flags[i] = -1;
+    }
+}
+
+void scc::stack_space_check(int location) const
+{
+    if (location < next_instruction_addr)
+    {
+        cout << "*** ERROR: insufficient stack space ***\n";
+        exit(1);
     }
 }
 
@@ -438,6 +448,37 @@ void scc::handle_end()
 
 void scc::second_pass()
 {
+    int index;
+    int stack_start = next_const_or_var_addr - 1;
+
+    for (int i = 0; i < next_const_or_var_addr; i++)
+    {
+        if (flags[i] != -1) // incomplet instruction ?
+        {
+            if (flags[i] > 0) // goto
+            {
+                // Search symbol table for line number flags[i]
+                // add that line number's lovation from the symbol table the instruciton
+                // memory[i] += ...
+            }
+            else if (flags[i] == -2) // incomplete right op reg
+            {
+                // add location of temp storage to instuction
+                memory[i] += next_const_or_var_addr;
+            }
+            else if (flags[i] < -2) // incomplete stack reference
+            {
+                // compute stack idx
+
+                int idx = -3 - flags[i];
+               // location fo that stack elemet = stack start - idx;
+               // stack_space_check(location);
+
+                // check to see if location referenced by stack index is within the bounds of the space available for te stack
+                // add location to instruction 
+            }
+        }
+    }
 }
 
 void scc::print_program() const

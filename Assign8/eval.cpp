@@ -28,7 +28,7 @@ int evaluate(const string& postfix)
     string op;
     stringstream ss = stringstream(postfix);
 
-    mystack eval_stack;
+    mystack<int> eval_stack;
 
     // loop through each element of the postfix expression
     while (ss >> op)
