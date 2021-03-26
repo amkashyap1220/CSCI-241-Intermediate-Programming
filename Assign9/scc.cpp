@@ -46,6 +46,7 @@ private:
     int get_symbol_location(const string &token);
     int search_symbol_table(int, char) const;
     void handle_data(istringstream &ss);
+    void handle_let(istringstream &ss, const string& buffer);
 };
 
 int main(int argc, char *argv[])
@@ -94,16 +95,70 @@ void scc::first_pass()
         }
         else if (command == "data")
         {
-            // ... code to process 'data' command ...
             handle_data(ss);
         }
         else if (command == "let")
         {
             // ... code to process 'let' command ...
+
+            handle_let(istringstream &ss, const string &buffer1);
         }
         else if (command == "if")
         {
             // this and let are the only two more than 1 sml lines
+
+            // 60 if x > 10 goto 120
+
+            string lop, relop, rop, unused;
+            int lop_location, rop_location, linen, branch_location;
+
+            // Read left operand into lop
+            // Get location for the symbol lop (lop location) (I HAVE A FUNCTUION FOR THIS)
+
+            // Read relational operator into relop
+
+            // REad right operand into rop
+            // Get location for the symbol rop (rop_location)
+
+            // read the 'goto' into unused and ignore it
+
+            // read line number into linen
+
+            // Search the symbol table for that line number. A failed search will require the generation of partial branch instructions until second pass
+            int index = search_symbol_table(linen, 'L');
+
+            // Test relop and generate the appropriate complete or partial instructions for this relational operator
+            if (relop == ">")
+            {
+                // Generate Load
+                memory_check();
+                memory[next_instruction_addr] = LOAD * 100 + rop_location;
+                next_instruction_addr++;
+
+                // Generate Subract
+                memory_check();
+                memory[next_instruction_addr] = SUBTRACT * 100 + lop_location;
+                next_instruction_addr++;
+
+                // Generate BRANCHNEG
+                memory_check();
+                if (index == -1)
+                {
+                    memory[next_instruction_addr] = BRANCHNEG * 100;
+                    flags[next_instruction_addr] = linen;
+                }
+                else
+                {
+                    memory[next_instruction_addr] = BRANCHNEG * 100 + symbol_table[index].location;
+                }
+                next_instruction_addr++;
+            }
+            else if (relop == "<")
+            {
+                    // LECTURE 20; THERE SHOULD BE A branch logic for if_goto.docx
+            }
+
+
         }
         else if (command == "goto")
         {
@@ -122,6 +177,154 @@ void scc::first_pass()
     }
 }
 
+void scc::handle_let(istringstream &ss, const string& buffer)
+{
+    // 85 let x (y + 10) * (z - 3)
+
+    string lvar; // variabvle on left of statement
+    int lvar_location, location;
+    string token, postfix;
+
+    // Read the variable on the left side of the '=' into lvar
+    // Get the location of the symbol lvar (lvar_location)
+
+    // Locate the '=' in buffer. Infix string starts after that
+
+    // call your convert funciton, passing it the infix string, to get the postfix string to process
+
+    istringstream ss(postfix);
+    int next_stack_idx = 0;
+    while (ss >> token)
+    {
+        if (islower(token[0]) || isdigit(token[0]))
+        {
+            // This is an operand (variable or constant)
+
+            // Get the location of token from the symbol table (location)
+            int location = get_symbol_location(token);
+
+            memory_check();
+            memory[next_instruction_addr] = LOAD * 100 + location;
+            next_instruction_addr++;
+
+            memory_check();
+            memory[next_instruction_addr] = STORE * 100;
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_instruction_addr;
+            next_stack_idx++;
+        }
+        else if (token == "+")
+        {
+            memory_check();
+            memory[next_instruction_addr] = LOAD * 100;     // omit address
+            next_stack_idx--;
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_instruction_addr++;
+
+            memory_check();
+            memory[next_instruction_addr] = ADD * 100;      // for addition, omit address
+            next_stack_idx--;
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_instruction_addr++;
+
+            memory_check();
+            memory[next_instruction_addr] = STORE * 100;    // omit address
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_stack_idx++;
+            next_instruction_addr++;
+        }
+        else if (token == "*")
+        {
+            memory_check();
+            memory[next_instruction_addr] = LOAD * 100;     // omit address
+            next_stack_idx--;
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_instruction_addr++;
+
+            memory_check();
+            memory[next_instruction_addr] = MULTIPLY * 100;      // for addition, omit address
+            next_stack_idx--;
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_instruction_addr++;
+
+            memory_check();
+            memory[next_instruction_addr] = STORE * 100;    // omit address
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_stack_idx++;
+            next_instruction_addr++;
+        }
+        else if (token == "-")
+        {
+            memory_check();
+            memory[next_instruction_addr] = LOAD * 100;        // omit address
+            next_stack_idx--;
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_instruction_addr++;
+            
+            memory_check();
+            memory[next_instruction_addr] = STORE * 100;       // omit address
+            flags[next_instruction_addr] = -2;
+            next_instruction_addr++;
+            
+            memory_check();
+            memory[next_instruction_addr] = LOAD * 100;        // omit address
+            next_stack_idx--;
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_instruction_addr++;
+            
+            memory_check();
+            memory[next_instruction_addr] = SUBTRACT * 100;    // for subtraction, omit address
+            flags[next_instruction_addr] = -2;
+            next_instruction_addr++;
+            
+            memory_check();
+            memory[next_instruction_addr] = STORE * 100;       // omit address
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_stack_idx++;
+            next_instruction_addr++;
+        }
+        else // if (token == "/")
+        {
+             memory_check();
+            memory[next_instruction_addr] = LOAD * 100;        // omit address
+            next_stack_idx--;
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_instruction_addr++;
+            
+            memory_check();
+            memory[next_instruction_addr] = STORE * 100;       // omit address
+            flags[next_instruction_addr] = -2;
+            next_instruction_addr++;
+            
+            memory_check();
+            memory[next_instruction_addr] = LOAD * 100;        // omit address
+            next_stack_idx--;
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_instruction_addr++;
+            
+            memory_check();
+            memory[next_instruction_addr] = DIVIDE * 100;    // for subtraction, omit address
+            flags[next_instruction_addr] = -2;
+            next_instruction_addr++;
+            
+            memory_check();
+            memory[next_instruction_addr] = STORE * 100;       // omit address
+            flags[next_instruction_addr] = -3 - next_stack_idx;
+            next_stack_idx++;
+            next_instruction_addr++;
+        }
+    }
+
+    // Pop the final result off the stack
+
+    memory_check();
+    memory[next_instruction_addr] = LOAD * 100;
+    flags[next_instruction_addr] = -3;
+    next_instruction_addr++;
+
+    memory_check();
+    memory[next_instruction_addr] = STORE * 100 + lvar_location;
+}
 void scc::handle_data(istringstream &ss)
 {
     string token;
