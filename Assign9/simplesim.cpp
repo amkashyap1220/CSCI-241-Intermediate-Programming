@@ -161,16 +161,16 @@ void simplesim::execute_program()
                 instruction_counter = operand;
                 break;
             case BRANCHZERO:
-                branched = true;
                 if (accumulator == 0)
                 {
+                    branched = true;
                     instruction_counter = operand;
                 }
                 break;
             case BRANCHNEG:
-                branched = true;
-                if (accumulator <= 0)
+                if (accumulator < 0)
                 {
+                    branched = true;
                     instruction_counter = operand;
                 }
                 break;

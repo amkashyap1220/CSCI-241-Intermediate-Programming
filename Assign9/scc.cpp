@@ -70,6 +70,7 @@ private:
     void handle_let(istringstream &ss, const string& buffer);
     void handle_print(istringstream &ss);
     void handle_goto(istringstream &ss);
+    void handle_if(istringstream &ss);
 };
 
 int main(int argc, char *argv[])
@@ -147,59 +148,7 @@ void scc::first_pass()
         }
         else if (command == "if")
         {
-            /*
-            // this and let are the only two more than 1 sml lines
-
-            // 60 if x > 10 goto 120
-
-            string lop, relop, rop, unused;
-            int lop_location, rop_location, linen, branch_location;
-
-            // Read left operand into lop
-            // Get location for the symbol lop (lop location) (I HAVE A FUNCTUION FOR THIS)
-
-            // Read relational operator into relop
-
-            // REad right operand into rop
-            // Get location for the symbol rop (rop_location)
-
-            // read the 'goto' into unused and ignore it
-
-            // read line number into linen
-
-            // Search the symbol table for that line number. A failed search will require the generation of partial branch instructions until second pass
-            int index = search_symbol_table(linen, 'L');
-
-            // Test relop and generate the appropriate complete or partial instructions for this relational operator
-            if (relop == ">")
-            {
-                // Generate Load
-                memory_check();
-                memory[next_instruction_addr] = LOAD * 100 + rop_location;
-                next_instruction_addr++;
-
-                // Generate Subract
-                memory_check();
-                memory[next_instruction_addr] = SUBTRACT * 100 + lop_location;
-                next_instruction_addr++;
-
-                // Generate BRANCHNEG
-                memory_check();
-                if (index == -1)
-                {
-                    memory[next_instruction_addr] = BRANCHNEG * 100;
-                    flags[next_instruction_addr] = linen;
-                }
-                else
-                {
-                    memory[next_instruction_addr] = BRANCHNEG * 100 + symbol_table[index].location;
-                }
-                next_instruction_addr++;
-            }
-            else if (relop == "<")
-            {
-                    // LECTURE 20; THERE SHOULD BE A branch logic for if_goto.docx
-            }*/
+            handle_if(ss);
         }
         else if (command == "goto")
         {
@@ -218,6 +167,202 @@ void scc::first_pass()
         {
             // do nothing
         }
+    }
+}
+void scc::handle_if(istringstream &ss)
+{
+    // 60 if x > 10 goto 120
+
+    string lop, relop, rop, unused;
+    int lop_location, rop_location, line_number, branch_location;
+
+    // Read left operand into lop
+    ss >> lop;
+    // Get location for the symbol lop (lop location) (I HAVE A FUNCTUION FOR THIS)
+    lop_location = get_symbol_location(lop);
+    // Read relational operator into relop
+    ss >> relop;
+    // REad right operand into rop
+    ss >> rop;
+    // Get location for the symbol rop (rop_location)
+    rop_location = get_symbol_location(rop);
+    // read the 'goto' into unused and ignore it
+    ss >> unused;
+    // read line number into linen
+    ss >> line_number;
+    // Search the symbol table for that line number. A failed search will require the generation of partial branch instructions until second pass
+    int index = search_symbol_table(line_number, 'L');
+
+    // Test relop and generate the appropriate complete or partial instructions for this relational operator
+    if (relop == "==")
+    {
+        // Generate Load
+        memory_check();
+        memory[next_instruction_addr] = LOAD * 100 + lop_location;
+        next_instruction_addr++;
+
+        // Generate Subract
+        memory_check();
+        memory[next_instruction_addr] = SUBTRACT * 100 + rop_location;
+        next_instruction_addr++;
+
+        // Generate BRANCHNEG
+        memory_check();
+        if (index == -1)
+        {
+            memory[next_instruction_addr] = BRANCHZERO * 100;
+            flags[next_instruction_addr] = line_number;
+        }
+        else
+        {
+            memory[next_instruction_addr] = BRANCHZERO * 100 + symbol_table[index].location;
+        }
+        next_instruction_addr++;
+    }
+    else if (relop == "!=")
+    {
+        // Generate Load
+        memory_check();
+        memory[next_instruction_addr] = LOAD * 100 + lop_location;
+        next_instruction_addr++;
+
+        // Generate Subract
+        memory_check();
+        memory[next_instruction_addr] = SUBTRACT * 100 + rop_location;
+        next_instruction_addr++;
+
+        memory_check();
+        memory[next_instruction_addr] = BRANCHZERO * 100 + next_instruction_addr + 2;
+        next_instruction_addr++;
+
+       // Generate BRANCH
+        memory_check();
+        if (index == -1)
+        {
+            memory[next_instruction_addr] = BRANCH * 100;
+            flags[next_instruction_addr] = line_number;
+        }
+        else
+        {
+            memory[next_instruction_addr] = BRANCH * 100 + symbol_table[index].location;
+        }
+        next_instruction_addr++;
+    }
+    else if (relop == "<")
+    {
+        // Generate Load
+        memory_check();
+        memory[next_instruction_addr] = LOAD * 100 + lop_location;
+        next_instruction_addr++;
+
+        // Generate Subract
+        memory_check();
+        memory[next_instruction_addr] = SUBTRACT * 100 + rop_location;
+        next_instruction_addr++;
+
+        // Generate BRANCHNEG
+        memory_check();
+        if (index == -1)
+        {
+            memory[next_instruction_addr] = BRANCHNEG * 100;
+            flags[next_instruction_addr] = line_number;
+        }
+        else
+        {
+            memory[next_instruction_addr] = BRANCHNEG * 100 + symbol_table[index].location;
+        }
+        next_instruction_addr++;
+    }
+    else if (relop == "<=")
+    {
+        // Generate Load
+        memory_check();
+        memory[next_instruction_addr] = LOAD * 100 + lop_location;
+        next_instruction_addr++;
+
+        // Generate Subract
+        memory_check();
+        memory[next_instruction_addr] = SUBTRACT * 100 + rop_location;
+        next_instruction_addr++;
+
+        // Generate BRANCHNEG
+        memory_check();
+        if (index == -1)
+        {
+            memory[next_instruction_addr] = BRANCHNEG * 100;
+            flags[next_instruction_addr] = line_number;
+            next_instruction_addr++;
+            memory_check();
+            memory[next_instruction_addr] = BRANCHZERO * 100;
+            flags[next_instruction_addr] = line_number;
+
+        }
+        else
+        {
+            memory[next_instruction_addr] = BRANCHNEG * 100 + symbol_table[index].location;
+            next_instruction_addr++;
+            memory_check();
+            memory[next_instruction_addr] = BRANCHZERO * 100 + symbol_table[index].location;
+        }
+        next_instruction_addr++;
+    }
+    else if (relop == ">")
+    {
+        // Generate Load
+        memory_check();
+        memory[next_instruction_addr] = LOAD * 100 + rop_location;
+        next_instruction_addr++;
+
+        // Generate Subract
+        memory_check();
+        memory[next_instruction_addr] = SUBTRACT * 100 + lop_location;
+        next_instruction_addr++;
+
+        // Generate BRANCHNEG
+        memory_check();
+        if (index == -1)
+        {
+            memory[next_instruction_addr] = BRANCHNEG * 100;
+            flags[next_instruction_addr] = line_number;
+        }
+        else
+        {
+            memory[next_instruction_addr] = BRANCHNEG * 100 + symbol_table[index].location;
+        }
+        next_instruction_addr++;
+    }
+    else if (relop == ">=")
+    {
+        // Generate Load
+        memory_check();
+        memory[next_instruction_addr] = LOAD * 100 + rop_location;
+        next_instruction_addr++;
+
+        // Generate Subract
+        memory_check();
+        memory[next_instruction_addr] = SUBTRACT * 100 + lop_location;
+        next_instruction_addr++;
+
+        // Generate BRANCHNEG
+        memory_check();
+        if (index == -1)
+        {
+            memory[next_instruction_addr] = BRANCHNEG * 100;
+            flags[next_instruction_addr] = line_number;
+            next_instruction_addr++;
+            memory_check();
+            memory[next_instruction_addr] = BRANCHZERO * 100;
+            flags[next_instruction_addr] = line_number;
+
+        }
+        else
+        {
+            memory[next_instruction_addr] = BRANCHNEG * 100 + symbol_table[index].location;
+            next_instruction_addr++;
+            memory_check();
+            memory[next_instruction_addr] = BRANCHZERO * 100 + symbol_table[index].location;
+        }
+        next_instruction_addr++;
     }
 }
 
