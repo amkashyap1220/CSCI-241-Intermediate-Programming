@@ -1,12 +1,10 @@
-/**
- * @file mystack.h
- * @author Alexander Kashyap (z1926618@students.niu.edu)
- * Due: 2021-03-11
- * 
- * Assignment 7
- * Course: CSCI 241
- * Section: 1
- */
+//*****************************************************************************
+//
+//  mystack.h
+//  CSCI 241 Assignment 9
+//  Created by Alexander Kashyap z1926618
+//
+//*****************************************************************************
 
 #ifndef MYSTACK_H
 #define MYSTACK_H
