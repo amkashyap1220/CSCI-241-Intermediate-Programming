@@ -1,14 +1,13 @@
 #
 # PROGRAM:    Assignment 9
-# PROGRAMMER: your name
-# LOGON ID:   your z-id
-# DATE DUE:   due date of program
+# PROGRAMMER: Alexander Kashyap
+# LOGON ID:   z1926618
+# DATE DUE:   4/1/21
 #
     
 # Compiler variables
 CXX = g++
-CXXFLAGS = -std=c++11
-#CXXFLAGS = -Wall -Werror -std=c++11
+CXXFLAGS = -Wall -Werror -std=c++11
         
 # Rule to link object code files to create executable file
 all: scc simplesim

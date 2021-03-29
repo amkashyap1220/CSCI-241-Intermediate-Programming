@@ -6,6 +6,7 @@
 //
 //*****************************************************************************
 #include "sml.h"
+#include "inpost.h"
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -26,6 +27,11 @@ struct table_entry
     int location;     // Simplesim address (00 to MEMSIZE-1)
 };
 
+/**
+ * 
+ * Simple compiler.
+ *
+ ********************************************************************/
 class scc
 {
 public:
@@ -98,6 +104,12 @@ scc::scc()
     }
 }
 
+/**
+ * Checks the stack space
+ *
+ * @param location location in which to check 
+ *
+ ********************************************************************/
 void scc::stack_space_check(int location) const
 {
     if (location < next_instruction_addr)
@@ -107,7 +119,12 @@ void scc::stack_space_check(int location) const
     }
 }
 
+/**
+ * Performs first pass of compilation.
+ *
+ ********************************************************************/
 void scc::first_pass()
+
 {
     string buffer1, buffer2, command;
 
@@ -142,9 +159,7 @@ void scc::first_pass()
         }
         else if (command == "let")
         {
-            /*
-            handle_let(istringstream &ss, const string &buffer1);
-            */
+            handle_let(ss, buffer1);
         }
         else if (command == "if")
         {
@@ -169,12 +184,19 @@ void scc::first_pass()
         }
     }
 }
+
+/**
+ * Generates code for an "if" instruction.
+ *
+ * @param ss Input string stream from which to read.
+ *
+ ********************************************************************/
 void scc::handle_if(istringstream &ss)
 {
-    // 60 if x > 10 goto 120
+    //25 if x <= -1 goto 60
 
     string lop, relop, rop, unused;
-    int lop_location, rop_location, line_number, branch_location;
+    int lop_location, rop_location, line_number;
 
     // Read left operand into lop
     ss >> lop;
@@ -290,7 +312,7 @@ void scc::handle_if(istringstream &ss)
         if (index == -1)
         {
             memory[next_instruction_addr] = BRANCHNEG * 100;
-            flags[next_instruction_addr] = line_number;
+            flags[next_instruction_addr] = line_number; 
             next_instruction_addr++;
             memory_check();
             memory[next_instruction_addr] = BRANCHZERO * 100;
@@ -366,13 +388,20 @@ void scc::handle_if(istringstream &ss)
     }
 }
 
+/**
+ * Generates code for an "goto" instruction.
+ *
+ * @param ss Input string stream from which to read.
+ *
+ ********************************************************************/
 void scc::handle_goto(istringstream &ss)
 {
     string token;
 
     ss >> token;
 
-    int idx = search_symbol_table(stoi(token), 'T');
+    // Search symbol table for the line number
+    int idx = search_symbol_table(stoi(token), 'L');
 
     memory_check();
     if (idx == -1) // after goto line
@@ -387,37 +416,52 @@ void scc::handle_goto(istringstream &ss)
     next_instruction_addr++;
 }
 
+/**
+ * Generates code for an "print" instruction.
+ *
+ * @param ss Input string stream from which to read.
+ *
+ ********************************************************************/
 void scc::handle_print(istringstream &ss)
 {
     string token;
 
     ss >> token;
 
+    // Get the location of the symbol
     int location = get_symbol_location(token);
 
+    // Generate WRITE 
     memory_check();
     memory[next_instruction_addr] = WRITE * 100 + location;
     next_instruction_addr++;
 }
 
+/**
+ * Generates code for an "let" instruction.
+ *
+ * @param ss Input string stream from which to read.
+ * @param buffer rest of the string buffer
+ ********************************************************************/
 void scc::handle_let(istringstream &ss, const string& buffer)
 {
     // 85 let x (y + 10) * (z - 3)
 
     string lvar; // variabvle on left of statement
-    int lvar_location, location;
+    int lvar_location;
     string token, postfix;
 
     // Read the variable on the left side of the '=' into lvar
+    ss >> lvar;
     // Get the location of the symbol lvar (lvar_location)
-
+    lvar_location = get_symbol_location(lvar);
     // Locate the '=' in buffer. Infix string starts after that
-
     // call your convert funciton, passing it the infix string, to get the postfix string to process
+    postfix = convert(buffer.substr(buffer.find("=") + 1));
 
     istringstream sp(postfix);
     int next_stack_idx = 0;
-    while (ss >> token)
+    while (sp >> token)
     {
         if (islower(token[0]) || isdigit(token[0]))
         {
@@ -547,19 +591,32 @@ void scc::handle_let(istringstream &ss, const string& buffer)
 
     memory_check();
     memory[next_instruction_addr] = STORE * 100 + lvar_location;
+    next_instruction_addr++;
 }
 
+/**
+ * Generates code for an "data" instruction.
+ *
+ * @param ss Input string stream from which to read.
+ *
+ ********************************************************************/
 void scc::handle_data(istringstream &ss)
 {
     string token;
 
     ss >> token;
 
+    // Check data and add to data table
     data_check();
     data[ndata] = stoi(token);
     ndata++;
 }
 
+/**
+ * Checks whether there is room in the memory array to add another
+ * instruction.
+ *
+ ********************************************************************/
 void scc::memory_check() const
 {
     if (next_instruction_addr >= MEMORY_SIZE || next_instruction_addr > next_const_or_var_addr)
@@ -569,6 +626,11 @@ void scc::memory_check() const
     }
 }
 
+/**
+ * Checks whether there is room in the data array to add another data
+ * item.
+ *
+ ********************************************************************/
 void scc::data_check() const
 {
     if (ndata >= MEMORY_SIZE)
@@ -578,6 +640,12 @@ void scc::data_check() const
     }
 }
 
+/**
+ * Generates code for an "input" instruction.
+ *
+ * @param ss Input string stream from which to read.
+ *
+ ********************************************************************/
 void scc::handle_input(istringstream &ss)
 {
     string token;
@@ -591,6 +659,15 @@ void scc::handle_input(istringstream &ss)
     next_instruction_addr++;
 }
 
+/**
+ * Gets the location of a constant or variable, adding it to the 
+ * symbol table and memory if necessary.
+ *
+ * @param token The symbol to locate.
+ *
+ * @return The symbol's location.
+ *
+ ********************************************************************/
 int scc::get_symbol_location(const string &token)
 {
     int location, symbol;
@@ -642,6 +719,17 @@ int scc::get_symbol_location(const string &token)
     return location;
 }
 
+/**
+ * Searches the symbol table for a symbol.
+ *
+ * @param symbol The symbol for which to search the symbol table.
+ * @param type The type of the symbol ('C', 'L', or 'V')
+ *
+ * @return The index of the item found or -1 if the search fails.
+ *
+ * @note Uses the linear search algorithm.
+ *
+ ********************************************************************/
 int scc::search_symbol_table(int symbol, char type) const
 {
     for (int i = 0; i < next_symbol_table_idx; i++)
@@ -654,16 +742,24 @@ int scc::search_symbol_table(int symbol, char type) const
     return -1;
 }
 
+/**
+ * Generates code for an "end" instruction.
+ *
+ ********************************************************************/
 void scc::handle_end()
 {
+    // Generate HALT
     memory_check();
     memory[next_instruction_addr] = HALT * 100;
     next_instruction_addr++;
 }
 
+/**
+ * Performs second pass of compilation.
+ *
+ ********************************************************************/
 void scc::second_pass()
 {
-    int index;
     int stack_start = next_const_or_var_addr - 1;
 
     for (int i = 0; i < next_const_or_var_addr; i++)
@@ -675,6 +771,7 @@ void scc::second_pass()
                 // Search symbol table for line number flags[i]
                 // add that line number's lovation from the symbol table the instruciton
                 // memory[i] += ...
+
                 int idx = search_symbol_table(flags[i], 'L');
                 memory[i] += symbol_table[idx].location;
             }
@@ -689,28 +786,35 @@ void scc::second_pass()
 
                 int idx = -3 - flags[i];
                // location fo that stack elemet = stack start - idx;
-               // stack_space_check(location);
+               int location = stack_start - idx;
+               stack_space_check(location);
 
                 // check to see if location referenced by stack index is within the bounds of the space available for te stack
                 // add location to instruction 
+                memory[i] += location;
             }
         }
     }
 }
 
+/**
+ * Prints memory and data for the compiled SML program.
+ *
+ ********************************************************************/
 void scc::print_program() const
 {
-    // Print memory array followed by the data array
     cout << setfill('0') << internal << showpos;
+
+    // Print entire memory array.
     for (int i = 0; i < MEMORY_SIZE; i++)
-    {
         cout << setw(5) << memory[i] << endl;
-    }
+
+    // Print "end of instructions" sentinel value.
     cout << -99999 << endl;
 
     cout << setfill(' ') << noshowpos;
+    
+    // Print data values.
     for (int i = 0; i < ndata; i++)
-    {
         cout << data[i] << endl;
-    }
 }
