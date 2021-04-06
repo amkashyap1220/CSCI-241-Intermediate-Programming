@@ -395,11 +395,6 @@ std::ostream &operator<<(std::ostream &os, const mylist<T> &obj)
     // Loop through the obj mylist passed and print each element followed by a space
     for (node<T> *ptr = obj.l_front; ptr != nullptr; ptr = ptr->next)
     {
-        if (ptr->next == nullptr)
-        {
-            os << ptr->value;
-            continue;
-        }
         os << ptr->value << " ";
     }
     return os;
