@@ -139,7 +139,7 @@ int main()
     
     cout << "*** Testing self-assignment ***\n\n";
     
-    l1 = l1;
+    //l1 = l1;
     
     cout << "l1 (size " << l1.size() << "): " << l1 << endl << endl;
     

@@ -1,0 +1,122 @@
+*** Testing default constructor ***
+
+*** Testing size(), operator<<(), and empty() with empty list ***
+
+l1 (size 0): 
+l1 is empty
+
+*** Testing push_back() into empty list ***
+
+*** Testing size(), operator<<(), and empty() with non-empty list ***
+
+l1 (size 1): 40
+l1 is not empty
+
+*** Testing push_back() into non-empty list ***
+
+l1 (size 3): 40 50 60
+
+*** Testing push_front() into empty list ***
+
+l2 (size 1): c
+
+*** Testing push_front() into non-empty list ***
+
+l2 (size 3): a b c
+
+*** Testing push_front() and push_back() ***
+
+l1 (size 6): 10 20 30 40 50 60
+l2 (size 6): a b c d e f
+
+*** Testing read version of front() and back() ***
+
+l1 front: 10
+l1 back: 60
+
+*** Testing write version of front() and back() ***
+
+l1 front: 5
+l1 back: 65
+
+*** Testing pop_back() ***
+
+l2 (size 4): a b c d
+
+*** Testing pop_front() ***
+
+l2 (size 2): c d
+
+*** Testing pop to empty ***
+
+l2 (size 0): 
+
+*** Testing copy constructor ***
+
+l1 (size 6): 5 20 30 40 50 65
+l3 (size 6): 5 20 30 40 50 65
+
+*** Testing for shallow copy ***
+
+l1 (size 6): 10 20 30 40 50 60
+l3 (size 6): 5 20 30 40 50 65
+
+*** Testing copy assignment operator ***
+
+l1 (size 8): 10 20 30 40 50 60 70 80
+l3 (size 8): 10 20 30 40 50 60 70 80
+
+*** Testing for shallow copy ***
+
+l1 (size 9): 10 20 30 40 50 60 70 80 90
+l3 (size 7): 20 30 40 50 60 70 80
+
+*** Testing self-assignment ***
+
+l1 (size 9): 10 20 30 40 50 60 70 80 90
+
+*** Testing chained assignment ***
+
+l1 (size 9): 10 20 30 40 50 60 70 80 90
+l3 (size 9): 10 20 30 40 50 60 70 80 90
+l4 (size 9): 10 20 30 40 50 60 70 80 90
+
+*** Testing equality operator ***
+
+l1 and l4 are equal
+l1 and l3 are not equal
+l1 and l4 are not equal
+
+*** Testing less than operator ***
+
+l1 is less than l4
+l4 is not less than l1
+l1 is not less than l1
+l1 is not less than l3
+l3 is less than l1
+l1 is not less than l3
+l3 is less than l1
+
+*** Testing clear() ***
+
+l1 (size 0): 
+
+*** Testing for const correctness ***
+
+l4 (size 8): 20 30 40 50 60 70 80 90
+l4 is not empty
+l4 front: 20
+l4 back: 90
+l4 and l1 are not equal
+l4 is not less than l3
+l4 is not less than l1
+l1 is less than l4
+
+*** Testing exception handling ***
+
+Caught underflow exception on call to front()
+Caught underflow exception on call to back()
+Caught underflow exception on call to pop_front()
+Caught underflow exception on call to pop_back()
+Caught underflow exception on call to front()
+Caught underflow exception on call to back()
