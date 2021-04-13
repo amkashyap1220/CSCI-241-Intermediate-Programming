@@ -52,7 +52,7 @@ int main()
     t1.level_order();
     cout << endl;
 
-    /**
+    
     cout << "*** Testing insertion of root node ***\n\n";
 
     t1.insert(56, 7.50);
@@ -62,6 +62,8 @@ int main()
     cout << "t1.size(): " << t1.size() << endl;
     cout << "t1.height(): " << t1.height() << endl;
     cout << "t1 is " << ((t1.empty()) ? "empty\n" : "not empty\n");
+
+    /**
     cout << "Minimum key: " << t1.min() << endl;
     cout << "Maximum key: " << t1.max() << endl << endl;
     ptr = t1.find(56);
@@ -157,7 +159,7 @@ int main()
     cout << "t1.size(): " << t1.size() << endl << endl;
 
     bstree<int, double>& t2 = t1;
-
+    
     cout << "*** Testing const correctness ***\n\n";
     
     cout << "t2.size(): " << t2.size() << endl;
@@ -204,6 +206,7 @@ int main()
     t3.inorder();
     cout << endl;
 
+    
     cout << "*** Testing clear() ***\n\n";
     
     t3.clear();

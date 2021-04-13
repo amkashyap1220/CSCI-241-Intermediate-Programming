@@ -15,6 +15,10 @@
 
 #include <cstdlib>
 #include <algorithm>
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 template <class K, class V>
 struct node
@@ -41,6 +45,15 @@ private:
     size_t tsize;
 
     void clone(node<K, V> *root);
+    size_t height(node<K, V> *n) const;
+    const node<K, V> *find(const K &key, node<K, V> *root) const;
+    void preorder(node<K, V> *root) const;
+    void postorder(node<K, V> *root) const;
+    void inorder(node<K, V> *root) const;
+    void print_level(node<K, V> *root, int level) const;
+    bool insert(node<K, V> *root, const K &key, const V &value);
+    const K& min(node<K, V> *root) const;
+    const K& max(node<K, V> *root) const;
 
 public:
     bstree();
@@ -48,10 +61,15 @@ public:
     bstree(const bstree<K, V> &x);
     size_t size() const;
     size_t height() const;
-    size_t height(node<K, V> *n) const;
     bool empty() const;
     const node<K, V> *find(const K &key) const;
-    const node<K, V> *find(const K &key, node<K, V> *root) const;
+    void preorder() const;
+    void postorder() const;
+    void inorder() const;
+    void level_order() const;
+    bool insert(const K &key, const V &value);
+    const K& min() const;
+    const K& max() const;
 };
 
 /******************************************************************************************************
@@ -189,5 +207,161 @@ const node<K, V> *bstree<K, V>::find(const K &key, node<K, V> *root) const
         return find(key, root->right);
     }
 }
+
+template <class K, class V>
+bool bstree<K, V>::insert(const K &key, const V &value)
+{
+    return insert(root, key, value);
+}
+
+template <class K, class V>
+bool bstree<K, V>::insert(node<K, V> *root, const K &key, const V &value)
+{
+    if (root == nullptr)
+    {
+        this->root = new node<K, V>(key, value);
+        tsize++;
+        return true;
+    }
+
+    if (root->key == key)
+    {
+        return false;
+    }
+
+    if (key < root->key)
+    {
+        return insert(root->left, key, value);
+    }
+    else
+    {
+        return insert(root->right, key, value);
+    }
+}
+
+/******************************************************************************************************
+ * Preorder traversal of the bstree
+******************************************************************************************************/
+template <class K, class V>
+void bstree<K, V>::preorder() const
+{
+    preorder(root);
+}
+
+/******************************************************************************************************
+ * Helper function for preorder, prints out key and value for the preorder traversal
+ * @param root current node
+******************************************************************************************************/
+template <class K, class V>
+void bstree<K, V>::preorder(node<K, V> *root) const
+{
+    if (root != nullptr)
+    {
+        cout << root->key << ": " << root->value << endl;
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+/******************************************************************************************************
+ * Postorder traversal of the bstree
+******************************************************************************************************/
+template <class K, class V>
+void bstree<K, V>::postorder() const
+{
+    postorder(root);
+}
+
+/******************************************************************************************************
+ * Helper function for postorder, prints out key and value for the postorder traversal
+ * @param root current node
+******************************************************************************************************/
+template <class K, class V>
+void bstree<K, V>::postorder(node<K, V> *root) const
+{
+    if (root != nullptr)
+    {
+        postorder(root->left);
+        postorder(root->right);
+        cout << root->key << ": " << root->value << endl;
+    }
+}
+
+/******************************************************************************************************
+ * Preorder traversal of the bstree
+******************************************************************************************************/
+template <class K, class V>
+void bstree<K, V>::inorder() const
+{
+    inorder(root);
+}
+
+/******************************************************************************************************
+ * Helper function for preorder, prints out key and value for the preorder traversal
+ * @param root current node
+******************************************************************************************************/
+template <class K, class V>
+void bstree<K, V>::inorder(node<K, V> *root) const
+{
+    if (root != nullptr)
+    {
+        inorder(root->left);
+        cout << root->key << ": " << root->value << endl;
+        inorder(root->right);
+    }
+}
+
+/******************************************************************************************************
+ * Level order traversal of the bstree
+******************************************************************************************************/
+template <class K, class V>
+void bstree<K, V>::level_order() const
+{
+    size_t h = height(root);
+
+    for (int i = 1; i <= h; i++)
+    {
+        print_level(root, i);
+    }
+}
+
+/******************************************************************************************************
+ * Helper function for level order traversal, prints out key and value for the level order traversal
+ * @param root current node
+ * @param level current level on the bstree
+******************************************************************************************************/
+template <class K, class V>
+void bstree<K, V>::print_level(node<K, V> *root, int level) const
+{
+    if (root == nullptr)
+    {
+        return;
+    }
+
+    if (level == 1)
+    {
+        cout << root->key << ": " << root->value << endl;
+    }
+    else if (level > 1)
+    {
+        print_level(root->left, level - 1);
+        print_level(root->right, level - 1);
+    }
+}
+
+
+//TODO min and max
+template <class K, class V>
+const K& min(node<K, V> *root) const;
+
+template <class K, class V>
+const K& min() const;
+
+template <class K, class V>
+const K& max(node<K, V> *root) const;
+
+template <class K, class V>
+const K& max() const;
+
 
 #endif
