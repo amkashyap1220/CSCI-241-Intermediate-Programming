@@ -1,13 +1,13 @@
 #
 # PROGRAM:    Assignment 11
-# PROGRAMMER: your name
-# LOGON ID:   your z-id
-# DATE DUE:   due date of program
+# PROGRAMMER: Alexander KAshyap
+# LOGON ID:   z1926618
+# DATE DUE:   4/15/21
 #
 
 # Compiler variables
-CXXFLAGS = -Wall -Werror -std=c++11
-
+#CXXFLAGS = -Wall -Werror -std=c++11
+CXXFLAGS = -std=c++11
 # Rule to link object code files to create executable file
 
 assign11: assign11.o

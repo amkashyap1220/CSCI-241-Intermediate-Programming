@@ -22,6 +22,7 @@ int main()
     const node<int, double>* ptr;
     bool success;
 
+    
     cout << std::fixed << std::setprecision(2);
 
     cout << "*** Testing size(), height(), empty(), and find() for empty tree ***\n\n";
@@ -32,6 +33,7 @@ int main()
     ptr = t1.find(56);
     cout << "56 " << ((ptr) ? "found\n\n" : "not found\n\n");
 
+    
     cout << "*** Testing traversals of empty tree ***\n\n";
 
     cout << "t1 preorder:\n\n";
@@ -50,6 +52,7 @@ int main()
     t1.level_order();
     cout << endl;
 
+    /**
     cout << "*** Testing insertion of root node ***\n\n";
 
     t1.insert(56, 7.50);
@@ -343,6 +346,6 @@ int main()
     cout << "t6 inorder: \n\n";
     t6.inorder();
     cout << endl;
-
+    **/
     return 0;
 }
