@@ -20,6 +20,9 @@
 using std::cout;
 using std::endl;
 
+/******************************************************************************************************
+ * Node struct
+******************************************************************************************************/
 template <class K, class V>
 struct node
 {
@@ -37,25 +40,30 @@ struct node
     }
 };
 
+/******************************************************************************************************
+ * BST class
+******************************************************************************************************/
 template <class K, class V>
 class bstree
 {
 private:
+    // Data members
     node<K, V> *root;
     size_t tsize;
 
-    void clone(node<K, V> *root);
+    // private methods
+    node<K, V> *clone(node<K, V> *root);
     size_t height(node<K, V> *n) const;
     const node<K, V> *find(const K &key, node<K, V> *root) const;
     void preorder(node<K, V> *root) const;
     void postorder(node<K, V> *root) const;
     void inorder(node<K, V> *root) const;
     void print_level(node<K, V> *root, int level) const;
-    bool insert(node<K, V> *root, const K &key, const V &value);
-    const K& min(node<K, V> *root) const;
-    const K& max(node<K, V> *root) const;
+    const K &min(node<K, V> *root) const;
+    const K &max(node<K, V> *root) const;
 
 public:
+    // public methods
     bstree();
     ~bstree();
     bstree(const bstree<K, V> &x);
@@ -68,8 +76,12 @@ public:
     void inorder() const;
     void level_order() const;
     bool insert(const K &key, const V &value);
-    const K& min() const;
-    const K& max() const;
+    const K &min() const;
+    const K &max() const;
+    void clear();
+    void destroy(node<K, V> *root);
+    bstree<K, V> &operator=(const bstree<K, V> &rhs);
+    bool remove(const K& key);
 };
 
 /******************************************************************************************************
@@ -89,7 +101,160 @@ bstree<K, V>::bstree()
 template <class K, class V>
 bstree<K, V>::~bstree()
 {
-    //clear();
+    clear();
+}
+
+/******************************************************************************************************
+ * Reset the bst data members and call the function to destroy the branches
+******************************************************************************************************/
+template <class K, class V>
+void bstree<K, V>::clear()
+{
+    destroy(root);
+    root = nullptr;
+    tsize = 0;
+}
+
+/******************************************************************************************************
+ * Recursively destroys the dynamically allocated storage if the bst's nodes
+ * @param root the current node
+******************************************************************************************************/
+template <class K, class V>
+void bstree<K, V>::destroy(node<K, V> *root)
+{
+    if (root != nullptr)
+    {
+        destroy(root->left);
+        destroy(root->right);
+
+        delete[] root;
+    }
+}
+
+/******************************************************************************************************
+ * Overload assignment operator
+ * @param rhs bst to be copied
+ * @return bstree<K, V>& reference to this
+******************************************************************************************************/
+template <class K, class V>
+bstree<K, V> &bstree<K, V>::operator=(const bstree<K, V> &rhs)
+{
+    if (this != &rhs)
+    {
+        clear();
+        tsize = rhs.tsize;
+        root = clone(rhs.root);
+    }
+    return *this;
+}
+
+/******************************************************************************************************
+ * Remove a node
+ * @param key key of node to be removed
+ * @return true if node removed
+ * @return false if node was not removed or not found
+******************************************************************************************************/
+template <class K, class V>
+bool bstree<K, V>::remove(const K& key)
+{
+    // root           : pointer to the root of the binary search tree
+    // t_size         : tree size  
+    // p              : pointer to the node to delete from the tree
+    // parent         : pointer to the parent node of the node to delete from the tree (or 
+    //                  nullptr if deleting the root node)
+    // replace        : pointer to node that will replace the deleted node
+    // replace_parent : pointer to parent of node that will replace the deleted node
+
+    // Start at the root of the tree and search for the key to delete.
+    node<K, V> *p = root;
+    node<K, V> *parent = nullptr;
+    while (p != nullptr && key != p->key)
+    {
+        parent = p;
+        if (key < p->key)
+        {
+            p = p->left;
+        }
+        else
+        {
+            p = p->right;
+        }
+    }
+
+    // If the node to delte was not found, signal failure.
+    if (p == nullptr)
+    {
+        return false;
+    }
+
+    node<K, V> *replace;
+    node<K, V> *replace_parent;
+    if (p->left == nullptr)
+    {
+        // Case 1a: p has no children. Replace p with its right child
+        // (which is nullptr).
+        //   - or -
+        // Case 1b: p has no left child but has a right child. Replace 
+        // p with its right child.
+        replace = p->right;
+    }
+    else if (p->right == nullptr)
+    {
+        // Case 2: p has a left child but no right child. Replace p 
+        // with its left child.
+        replace = p->left;
+    }
+    else
+    {
+        // Case 3: p has two children. Replace p with its inorder predecessor.
+
+        // Go left...
+        replace_parent = p;
+        replace = p->left;
+
+        // ...then all the way to the right.
+        while (replace->right != nullptr)
+        {
+            replace_parent = replace;
+            replace = replace->right;
+        }
+
+        // If we were able to go to the right, make the replacement node's
+        // left child the right child of its parent. Then make the left child
+        // of p the replacement's left child.
+        if (replace_parent != p)
+        {
+            replace_parent->right = replace->left;
+            replace->left = p->left;
+        }
+
+        // Make the right child of p the replacement's right child.
+        replace->right = p->right;
+    }
+
+    // Connect replacement node to the parent node of p (or the root if p has no parent).    
+    if (parent == nullptr)
+    {
+        root = replace;
+    }
+    else
+    {
+        if (p->key < parent->key)
+        {
+            parent->left = replace;
+        }
+        else
+        {
+            parent->right = replace;
+        }
+    }
+
+    // Delete the node, decrement the tree size, and signal success.
+    delete[] p;
+    tsize--;
+
+    // Success
+    return true;
 }
 
 /******************************************************************************************************
@@ -99,7 +264,8 @@ bstree<K, V>::~bstree()
 template <class K, class V>
 bstree<K, V>::bstree(const bstree<K, V> &x)
 {
-    preorder(x.root);
+    tsize = x.tsize;
+    root = clone(x.root);
 }
 
 /******************************************************************************************************
@@ -107,13 +273,22 @@ bstree<K, V>::bstree(const bstree<K, V> &x)
  * @param n a node in the bstree
 ******************************************************************************************************/
 template <class K, class V>
-void bstree<K, V>::clone(node<K, V> *root)
+node<K, V> *bstree<K, V>::clone(node<K, V> *root)
 {
     if (root != nullptr)
     {
-        insert(root->key, root->value);
-        clone(root->left);
-        clone(root->right);
+        // Make a copy of the node pointed to by root
+        node<K, V> *new_node = new node<K, V>(root->key, root->value);
+
+        // Recursively copy the left and right subtrees of the node
+        new_node->left = clone(root->left);
+        new_node->right = clone(root->right);
+
+        return new_node;
+    }
+    else
+    {
+        return nullptr;
     }
 }
 
@@ -208,35 +383,68 @@ const node<K, V> *bstree<K, V>::find(const K &key, node<K, V> *root) const
     }
 }
 
+/******************************************************************************************************
+ * Inserts a new node into the bst
+ * @param key key to be inserted
+ * @param value value to be inserted
+ * @return true if the node was successfully inserted
+ * @return false if the node was not inserted
+******************************************************************************************************/
 template <class K, class V>
 bool bstree<K, V>::insert(const K &key, const V &value)
 {
-    return insert(root, key, value);
-}
+    // root     : pointer to the root node of the tree (nullptr if tree is empty)
+    // t_size   : tree size  
+    // p        : pointer to a tree node
+    // parent   : pointer to the parent node of p (nullptr if p points to the root node)
+    // new_node : pointer used to create a new tree node
 
-template <class K, class V>
-bool bstree<K, V>::insert(node<K, V> *root, const K &key, const V &value)
-{
-    if (root == nullptr)
+    // Start at the root of the tree
+    node<K, V> *p = root;
+    node<K, V> *parent = nullptr;
+
+    // Search the tree for a null link or a duplicate key
+    while (p != nullptr && key != p->key)
     {
-        this->root = new node<K, V>(key, value);
-        tsize++;
-        return true;
+        parent = p;
+        if (key < p->key)
+        {
+            p = p->left;
+        }
+        else
+        {
+            p = p->right;
+        }
     }
 
-    if (root->key == key)
+    // If duplicates are disallowed, signal that insertion has failed
+    if (p != nullptr)
     {
         return false;
     }
 
-    if (key < root->key)
+    // Otherwise, create a tree node and insert it as a new leaf node
+    node<K, V> *new_node = new node<K, V>(key, value);
+
+    if (parent == nullptr)
     {
-        return insert(root->left, key, value);
+        root = new_node;
     }
     else
     {
-        return insert(root->right, key, value);
+        if (new_node->key < parent->key)
+        {
+            parent->left = new_node;
+        }
+        else
+        {
+            parent->right = new_node;
+        }
     }
+    tsize++;
+
+    // If duplicates are disallowed, signal that insertion has succeeded
+    return true;
 }
 
 /******************************************************************************************************
@@ -349,19 +557,53 @@ void bstree<K, V>::print_level(node<K, V> *root, int level) const
     }
 }
 
-
-//TODO min and max
+/******************************************************************************************************
+ * Helper function for min, recursively looks for the max key
+ * @param root the current node
+ * @return const K& the min key
+******************************************************************************************************/
 template <class K, class V>
-const K& min(node<K, V> *root) const;
+const K &bstree<K, V>::min(node<K, V> *root) const
+{
+    if (root->left != nullptr)
+    {
+        return min(root->left);
+    }
+    return root->key;
+}
 
+/******************************************************************************************************
+ * Find and returns the min key in the bstree
+ * @return const K& the min key
+******************************************************************************************************/
 template <class K, class V>
-const K& min() const;
+const K &bstree<K, V>::min() const
+{
+    return min(root);
+}
 
+/******************************************************************************************************
+ * Find and returns the max key in the bstree
+ * @return const K& the max key
+******************************************************************************************************/
 template <class K, class V>
-const K& max(node<K, V> *root) const;
+const K &bstree<K, V>::max() const
+{
+    return max(root);
+}
 
+/******************************************************************************************************
+ * Helper function for max, recursively looks for the max key
+ * @param root the current node
+ * @return const K& the max key
+******************************************************************************************************/
 template <class K, class V>
-const K& max() const;
-
-
+const K &bstree<K, V>::max(node<K, V> *root) const
+{
+    if (root->right != nullptr)
+    {
+        return max(root->right);
+    }
+    return root->key;
+}
 #endif

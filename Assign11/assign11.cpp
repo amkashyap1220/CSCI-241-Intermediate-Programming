@@ -62,8 +62,7 @@ int main()
     cout << "t1.size(): " << t1.size() << endl;
     cout << "t1.height(): " << t1.height() << endl;
     cout << "t1 is " << ((t1.empty()) ? "empty\n" : "not empty\n");
-
-    /**
+    
     cout << "Minimum key: " << t1.min() << endl;
     cout << "Maximum key: " << t1.max() << endl << endl;
     ptr = t1.find(56);
@@ -219,6 +218,7 @@ int main()
     cout << "t1.size(): " << t1.size() << endl;
     cout << "t1.height(): " << t1.height() << endl << endl;
 
+    
     cout << "*** Testing copy assignment operator ***\n\n";
 
     bstree<int, double> t5;
@@ -349,6 +349,6 @@ int main()
     cout << "t6 inorder: \n\n";
     t6.inorder();
     cout << endl;
-    **/
+    
     return 0;
 }
