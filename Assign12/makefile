@@ -12,8 +12,8 @@ all: assign12
 
 assign12: assign12.o rectangle.o shape.o triangle.o circle.o
 	g++ $(CXXFLAGS) -o assign12 $^
-rectangle: assign12.o rectangle.o shape.o
-	g++ $(CXXFLAGS) -o rectangle $^
+test: assign12.o rectangle.o shape.o circle.o triangle.o
+	g++ $(CXXFLAGS) -o test $^
 
 # Rules to compile source code files to object code
 assign12.o: assign12.cpp circle.h shape.h rectangle.h triangle.h
@@ -24,4 +24,4 @@ trianle.o: triangle.cpp triangle.h
 
 # Pseudo-target to remove object code and executable files
 clean:
-	rm -f assign12 rectangle *.o
+	rm -f assign12 test *.o
