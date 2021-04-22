@@ -40,13 +40,13 @@ int main(int argc, char * argv[])
     array.push_back(tri2);
 
     // Loop through the array or vector of shape pointers and call the print() method for each of them.
-    for (int i = 0; i < array.size(); i++)
+    for (size_t i = 0; i < array.size(); i++)
     {
         array[i]->print();
     }
 
     // Loop through the array or vector of shape pointers again and call the print() method for each of the circle objects in the array or vector.
-    for (int i = 0; i< array.size(); i++)
+    for (size_t i = 0; i< array.size(); i++)
     {
         circle* cir = dynamic_cast<circle*>(array[i]);
         if (cir != nullptr)
@@ -56,7 +56,7 @@ int main(int argc, char * argv[])
     }
 
     // Loop through the list of shape pointers one more time and delete each object.
-    for (int i = 0; i < array.size(); i++)
+    for (size_t i = 0; i < array.size(); i++)
     {
         array.pop_back();
     }
