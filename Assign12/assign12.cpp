@@ -19,6 +19,7 @@ using namespace std;
 
 int main(int argc, char * argv[])
 {
+
     // Declare either an array or a standard library vector of pointers to shape objects.
     vector<shape*> array;
 

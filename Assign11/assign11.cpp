@@ -106,10 +106,9 @@ int main()
     t1.insert(86, 9.74);
     t1.insert(62, 1.00);
     t1.insert(39, 8.99);
-
     cout << "*** Testing size(), height(), empty(), min(), max(), and find() ***\n\n";
     
-    cout << "t1.size(): " << t1.size() << endl;
+    cout << "t1.size(): " << t1.size() << " LEAVES: "<< t1.count_leaves() << endl;
     cout << "t1.height(): " << t1.height() << endl;
     cout << "t1 is " << ((t1.empty()) ? "empty\n" : "not empty\n");
     cout << "Minimum key: " << t1.min() << endl;
